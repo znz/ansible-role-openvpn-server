@@ -1,0 +1,79 @@
+---
+# tasks file for ansible-role-openvpn-server
+- name: "Install openvpn"
+  apt:
+    name: openvpn
+    install_recommends: no
+#- name: "Purge easy-esa"
+#  apt:
+#    name: easy-rsa
+#    state: absent
+#    purge: yes
+- name: "Install haveged"
+  apt: name=haveged
+- name: "Create dh.pem"
+  command: openssl dhparam -out /etc/openvpn/server/dh.pem 2048
+  args:
+    creates: /etc/openvpn/server/dh.pem
+- name: "Set permission of dh.pem"
+  file:
+    path: /etc/openvpn/server/dh.pem
+    owner: root
+    group: root
+    mode: 0600
+  notify: "Restart openvpn-server service"
+- name: "Create ta.key"
+  command: openvpn --genkey --secret /etc/openvpn/server/ta.key
+  args:
+    creates: /etc/openvpn/server/ta.key
+  notify: "Restart openvpn-server service"
+- name: "Create ccd directory"
+  file:
+    path: /etc/openvpn/server/ccd
+    state: directory
+    mode: 0755
+  notify: "Restart openvpn-server service"
+- debug:
+    var: openvpn_server_key_path
+- name: "Copy ca.crt"
+  copy:
+    dest: /etc/openvpn/server/ca.crt
+    content: "{{ lookup('file', '{{ openvpn_server_ca_crt_path }}') }}"
+    owner: root
+    group: root
+    mode: 0400
+  notify: "Restart openvpn-server service"
+- name: "Copy server key"
+  copy:
+    dest: /etc/openvpn/server/{{ inventory_hostname }}.key
+    content: "{{ lookup('file', '{{ openvpn_server_key_path }}') }}"
+    owner: root
+    group: root
+    mode: 0400
+  notify: "Restart openvpn-server service"
+- name: "Copy server crt"
+  copy:
+    dest: /etc/openvpn/server/{{ inventory_hostname }}.crt
+    content: "{{ lookup('file', '{{ openvpn_server_crt_path }}') }}"
+    owner: root
+    group: root
+    mode: 0400
+  notify: "Restart openvpn-server service"
+- name: "Copy crl"
+  copy:
+    dest: /etc/openvpn/server/crl.pem
+    content: "{{ lookup('file', '{{ openvpn_server_crt_path }}') }}"
+    owner: root
+    group: root
+    mode: 0400
+  notify: "Restart openvpn-server service"
+- name: "Create openvpn-server conf"
+  template:
+    src: server.conf.j2
+    dest: /etc/openvpn/server/{{ openvpn_server_network_name }}.conf
+    owner: root
+    group: root
+    mode: 0400
+  notify: "Restart openvpn-server service"
+- name: "Allow to OpenVPN server"
+  ufw: rule=allow direction=in to_port={{ openvpn_server_port }} proto={{ openvpn_server_proto }}

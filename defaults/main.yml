@@ -1,0 +1,35 @@
+---
+# defaults file for ansible-role-openvpn-server
+openvpn_server_ca_crt_path: "{{ playbook_dir }}/../easy-rsa/easyrsa3/pki/ca.crt"
+openvpn_server_key_path: "{{ playbook_dir }}/../easy-rsa/easyrsa3/pki/private/{{ inventory_hostname }}.key"
+openvpn_server_crt_path: "{{ playbook_dir }}/../easy-rsa/easyrsa3/pki/issued/{{ inventory_hostname }}.crt"
+openvpn_server_crl_path: "{{ playbook_dir }}/../easy-rsa/easyrsa3/pki/crl.pem"
+openvpn_server_network_name: "{{ inventory_hostname }}"
+openvpn_server_port: 1194
+openvpn_server_proto: "udp"
+openvpn_server_dev: "tun"
+openvpn_server_network: "192.168.8.0 255.255.255.0"
+openvpn_server_cipher: "AES-256-CBC"
+openvpn_server_auth: "SHA512"
+openvpn_server_tls_cipher: "TLS-DHE-RSA-WITH-AES-256-GCM-SHA384:TLS-DHE-RSA-WITH-AES-128-GCM-SHA256:TLS-DHE-RSA-WITH-AES-256-CBC-SHA:TLS-DHE-RSA-WITH-CAMELLIA-256-CBC-SHA:TLS-DHE-RSA-WITH-AES-128-CBC-SHA:TLS-DHE-RSA-WITH-CAMELLIA-128-CBC-SHA"
+openvpn_server_config: |
+  ifconfig-pool-persist /var/run/ipp.txt
+  client-to-client
+  keepalive 10 120
+  comp-lzo
+  ;max-clients 100
+  ;user nobody
+  ;group nogroup
+  persist-key
+  persist-tun
+  status /var/run/openvpn-status.log
+  ;log         /var/log/openvpn.log
+  log-append  /var/log/openvpn.log
+  verb 3
+  ;mute 20
+openvpn_server_more_config: ""
+  #route 192.168.9.0 255.255.255.0
+  #push "route 192.168.9.0 255.255.255.0"
+  #script-security 2
+  #client-connect connected.sh
+  #client-disconnect disconnected.sh

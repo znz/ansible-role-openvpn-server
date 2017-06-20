@@ -1,0 +1,9 @@
+---
+- hosts: all
+  become: yes
+  pre_tasks:
+  - apt: name=ufw
+  roles:
+  - role: znz.openvpn-server
+    openvpn_server_network_name: vagrant
+    openvpn_server_port: 1194

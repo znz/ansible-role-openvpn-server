@@ -1,0 +1,8 @@
+---
+# handlers file for ansible-role-openvpn-server
+- name: "Restart openvpn-server service"
+  service:
+    name: openvpn-server@{{ openvpn_server_network_name }}.service
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
