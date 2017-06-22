@@ -65,7 +65,7 @@
     content: "{{ lookup('file', '{{ openvpn_server_crl_path }}') }}"
     owner: root
     group: root
-    mode: 0400
+    mode: 0444
   #notify: "Restart openvpn-server service"
 - name: "Create openvpn-server conf"
   template:
