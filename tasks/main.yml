@@ -62,7 +62,7 @@
 - name: "Copy crl"
   copy:
     dest: /etc/openvpn/server/crl.pem
-    content: "{{ lookup('file', '{{ openvpn_server_crt_path }}') }}"
+    content: "{{ lookup('file', '{{ openvpn_server_crl_path }}') }}"
     owner: root
     group: root
     mode: 0400
