@@ -75,5 +75,26 @@
     group: root
     mode: 0400
   notify: "Restart openvpn-server service"
+- name: "Create connect.sh"
+  template:
+    src: connect.sh.j2
+    dest: /etc/openvpn/server/connect.sh
+    owner: root
+    group: root
+    mode: 0555
+- name: "Create disconnect.sh"
+  template:
+    src: disconnect.sh.j2
+    dest: /etc/openvpn/server/disconnect.sh
+    owner: root
+    group: root
+    mode: 0555
+- name: "Create slack.conf.sh"
+  template:
+    src: slack.conf.sh.j2
+    dest: /etc/openvpn/server/slack.conf.sh
+    owner: root
+    group: root
+    mode: 0400
 - name: "Allow to OpenVPN server"
   ufw: rule=allow direction=in to_port={{ openvpn_server_port }} proto={{ openvpn_server_proto }}

@@ -28,8 +28,16 @@ openvpn_server_config: |
   verb 3
   ;mute 20
 openvpn_server_more_config: ""
+  #ccd-exclusive
   #route 192.168.9.0 255.255.255.0
   #push "route 192.168.9.0 255.255.255.0"
   #script-security 2
-  #client-connect connected.sh
-  #client-disconnect disconnected.sh
+  #client-connect connect.sh
+  #client-disconnect disconnect.sh
+
+openvpn_server_connect_hook: ""
+openvpn_server_disconnect_hook: ""
+openvpn_server_slack_conf: |
+  url='https://hooks.slack.com/services/XXXXXX/XXXXXXXX/XXXXXXXXXXXXXXX'
+  username="OpenVPN"
+  to="#openvpn"

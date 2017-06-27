@@ -1,0 +1,31 @@
+#!/bin/bash
+subject="OpenVPN(Connected)"
+message="$subject: Name: $common_name, Global IP: $untrusted_ip, Local IP: $ifconfig_pool_remote_ip"
+{{ openvpn_server_connect_hook }}
+
+# Slack incoming web-hook URL and user name
+if [ -f "$(dirname "$0")/slack.conf.sh" ]; then
+    . "$(dirname "$0")/slack.conf.sh"
+fi
+url=${url?}
+username="${username:-OpenVPN}"
+emoji=":heart:"
+color="good"
+payload="payload={
+  \"channel\": \"${to//\"/\\\"}\",
+  \"username\": \"${username//\"/\\\"}\",
+  \"icon_emoji\": \"${emoji}\",
+  \"attachments\": [
+    {
+      \"fallback\": \"${message//\"/\\\"}\",
+      \"title\": \"${subject//\"/\\\"}\",
+      \"color\": \"${color}\",
+      \"fields\": [
+        {\"title\":\"Name\",\"value\":\"${common_name//\"/\\\"}\",\"short\":true},
+        {\"title\":\"Global IP\",\"value\":\"${untrusted_ip//\"/\\\"}\",\"short\":true},
+        {\"title\":\"Local IP\",\"value\":\"${ifconfig_pool_remote_ip//\"/\\\"}\",\"short\":true}
+      ]
+    }
+  ]
+}"
+curl -m 5 --data-urlencode "$payload" "$url"
