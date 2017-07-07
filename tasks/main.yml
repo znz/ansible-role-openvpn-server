@@ -33,8 +33,14 @@
     state: directory
     mode: 0755
   notify: "Restart openvpn-server service"
-- debug:
-    var: openvpn_server_key_path
+- name: "Create ccd contents"
+  copy:
+    dest: "/etc/openvpn/server/ccd/{{ item.key }}"
+    content: "{{ item.value }}"
+    owner: root
+    group: root
+    mode: 0444
+  with_dict: "{{ openvpn_server_ccd }}"
 - name: "Copy ca.crt"
   copy:
     dest: /etc/openvpn/server/ca.crt
@@ -96,5 +102,6 @@
     owner: root
     group: root
     mode: 0400
+
 - name: "Allow to OpenVPN server"
   ufw: rule=allow direction=in to_port={{ openvpn_server_port }} proto={{ openvpn_server_proto }}

@@ -41,3 +41,9 @@ openvpn_server_slack_conf: |
   url='https://hooks.slack.com/services/XXXXXX/XXXXXXXX/XXXXXXXXXXXXXXX'
   username="OpenVPN"
   to="#openvpn"
+
+openvpn_server_ccd: {}
+#  client1: |
+#    ifconfig-push 192.168.9.5 192.168.9.6
+#  client2: |
+#    ifconfig-push 192.168.9.9 192.168.9.10
