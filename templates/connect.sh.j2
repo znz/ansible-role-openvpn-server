@@ -1,6 +1,7 @@
 #!/bin/bash
 subject="OpenVPN(Connect)"
 message="$subject: Name: $common_name, Global IP: $untrusted_ip, Local IP: $ifconfig_pool_remote_ip"
+{{ openvpn_server_connect_hook_compress }}
 {{ openvpn_server_connect_hook }}
 
 # Slack incoming web-hook URL and user name

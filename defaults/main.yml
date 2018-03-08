@@ -16,7 +16,6 @@ openvpn_server_config: |
   ifconfig-pool-persist /var/run/ipp.txt
   client-to-client
   keepalive 10 120
-  comp-lzo
   ;max-clients 100
   ;user nobody
   ;group nogroup
@@ -34,6 +33,23 @@ openvpn_server_more_config: ""
   #script-security 2
   #client-connect connect.sh
   #client-disconnect disconnect.sh
+
+openvpn_server_connect_hook_compress: |
+  CONF=$1
+  # compression autoselect
+  if [ "$IV_LZ4v2" ] ; then
+      cat <<EOF >>$CONF
+  compress lz4-v2
+  push "compress lz4-v2"
+  EOF
+  elif [ "$IV_LZ4" ] ; then
+      cat <<EOF >>$CONF
+  compress lz4
+  push "compress lz4"
+  EOF
+  else
+      echo "compress lzo" >>$CONF
+  fi
 
 openvpn_server_connect_hook: ""
 openvpn_server_disconnect_hook: ""
